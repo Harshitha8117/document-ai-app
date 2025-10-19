@@ -1,4 +1,5 @@
-Document AI App
+SmartPrep : AI-Powered Study Summarizer & Tests
+
 
 A web-based application to process PDF/DOC/DOCX files for Summarization and Question Generation using NLP.
 
