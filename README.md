@@ -1,5 +1,3 @@
-Here's a sample GitHub README for your Document AI App:
-
 Document AI App
 
 A web-based application to process PDF/DOC/DOCX files for Summarization and Question Generation using NLP.
@@ -57,10 +55,4 @@ License
 
 MIT License
 
-Feel free to customize it according to your needs!
 
-You can add more sections like Contributing, Acknowledgments, or Future Work to make it more comprehensive.
-
-Also, don't forget to include a screenshot or demo video to showcase your app's features.
-
-Let me know if you need any further assistance!
