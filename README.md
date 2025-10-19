@@ -1,107 +1,66 @@
-```markdown
-# Document AI App
+Here's a sample GitHub README for your Document AI App:
 
-A web-based application to process PDF/DOC/DOCX files for **summarization** and **question generation** using NLP.
+Document AI App
 
----
+A web-based application to process PDF/DOC/DOCX files for Summarization and Question Generation using NLP.
 
-## **Project Structure**
-```
+Features
 
-document-ai-app/
-│
-├── backend/
-│   ├── server.js              # Express server
-│   ├── routes/upload.js       # File upload route
-│   └── services/nlpProcessor.js # Summarization & question generation
-│
-├── frontend/
-│   ├── index.html             # Main UI
-│   ├── styles.css             # Frontend styling
-│   └── script.js              # Frontend interactivity
-│
-├── uploads/                   # Temporary storage for uploaded files
-├── start-app.bat              # Start backend and frontend simultaneously
-├── package.json               # Node dependencies
-└── README.md                  # Project documentation
+- File Upload: Upload PDF/DOC/DOCX files
+- Page Range Selection: Select specific pages or full document
+- Summarization: Summarize content in points or paragraph style
+- Question Generation: Generate short-answer and long-answer questions
+- Dynamic UI: Interactive frontend with copy and download options
 
-````
+Installation & Running
 
----
+Clone the Repository
 
-## **Features**
-- Upload PDF/DOC/DOCX files
-- Page range selection (full or specific pages)
-- Summarization (points or paragraph style)
-- Question generation (short-answer & long-answer)
-- Dynamic frontend UI
-- Copy & download output
-
----
-
-## **Installation & Running**
-1. **Clone the repository**
-```bash
+bash
 git clone https://github.com/Harshitha8117/document-ai-app.git
-cd document-ai-app/src
-````
+cd document-ai-app
 
-2. **Install backend dependencies**
 
-```bash
+Install Dependencies
+
+bash
 cd backend
 npm install
-```
-
-3. **Install frontend server (optional)**
-
-```bash
 cd ../frontend
-npm install -g live-server
-```
+npm install
 
-4. **Start backend**
 
-```bash
-cd ../backend
+Start the App
+
+bash
+cd backend
 node server.js
-```
-
-5. **Start frontend**
-
-```bash
 cd ../frontend
 live-server
-```
 
-6. Open your browser → interact with the app: upload, summarize, generate questions.
 
----
+Usage
 
-## **Usage**
+1. Upload a PDF or DOC/DOCX file
+2. Select page range (optional)
+3. Choose action: Summarize or Generate Questions
+4. Choose summary style (points/paragraph)
+5. View, copy, or download results
 
-1. Upload a PDF or DOC/DOCX file.
-2. Select page range (optional).
-3. Choose action: Summarize or Generate Questions.
-4. Choose summary style if summarizing (points/paragraph).
-5. View, copy, or download results.
+Project Structure
 
----
+- backend/: Express server and NLP processing
+- frontend/: Dynamic UI and interactivity
+- uploads/: Temporary storage for uploaded files
 
-## **License**
+License
 
 MIT License
 
-````
+Feel free to customize it according to your needs!
 
----
+You can add more sections like Contributing, Acknowledgments, or Future Work to make it more comprehensive.
 
-Once you add these files:  
+Also, don't forget to include a screenshot or demo video to showcase your app's features.
 
-```powershell
-git add .gitignore README.md
-git commit -m "Add gitignore and professional README"
-git push
-````
-
-
+Let me know if you need any further assistance!
