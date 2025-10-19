@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document AI App</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Document AI Processor</h1>
+
+    <!-- File Upload -->
+    <div class="upload-section">
+      <label for="fileInput">Upload PDF or DOC/DOCX</label>
+      <input type="file" id="fileInput" accept=".pdf,.doc,.docx">
+      <button id="uploadBtn">Upload File</button>
+      <p id="uploadStatus">No file selected.</p>
+    </div>
+
+    <!-- Page Range -->
+    <div class="range-section">
+      <label for="pageRange">Select page range (optional, e.g., 1-3,5):</label>
+      <input type="text" id="pageRange" placeholder="Leave blank for full document">
+    </div>
+
+    <!-- Action Selection -->
+    <div class="action-section">
+      <h2>Choose an action:</h2>
+      <div class="radio-group">
+        <input type="radio" id="summarize" name="action" value="summarize" checked>
+        <label for="summarize">Summarization</label>
+
+        <input type="radio" id="questions" name="action" value="questions">
+        <label for="questions">Question Generation</label>
+      </div>
+
+      <!-- Summarization Options -->
+      <div id="summaryOptions">
+        <p>Summary Style:</p>
+        <input type="radio" id="points" name="summaryStyle" value="points" checked>
+        <label for="points">Points</label>
+
+        <input type="radio" id="paragraph" name="summaryStyle" value="paragraph">
+        <label for="paragraph">Paragraph</label>
+      </div>
+    </div>
+
+    <button id="processBtn">Process Document</button>
+
+    <!-- Output Section -->
+    <div class="output-section">
+      <h2>Output:</h2>
+      <div id="outputContent">Results will appear here.</div>
+      <div class="output-actions">
+        <button id="copyBtn">Copy to Clipboard</button>
+        <button id="downloadBtn">Download as TXT</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
