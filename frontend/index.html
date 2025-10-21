@@ -4,11 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document AI App</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="container">
-    <h1>Document AI Processor</h1>
+    <h1>Smart-Prep</h1>
 
     <!-- File Upload -->
     <div class="upload-section">
@@ -24,25 +24,40 @@
       <input type="text" id="pageRange" placeholder="Leave blank for full document">
     </div>
 
-    <!-- Action Selection -->
+    <!-- Action Selection as Cards -->
     <div class="action-section">
       <h2>Choose an action:</h2>
       <div class="radio-group">
-        <input type="radio" id="summarize" name="action" value="summarize" checked>
-        <label for="summarize">Summarization</label>
+        <div class="action-card" data-action="summarize">
+          <span class="card-content">
+            <h3>Summarization</h3>
+            <p>Get a concise summary of your document</p>
+          </span>
+        </div>
 
-        <input type="radio" id="questions" name="action" value="questions">
-        <label for="questions">Question Generation</label>
+        <div class="action-card" data-action="questions">
+          <span class="card-content">
+            <h3>Question Generation</h3>
+            <p>Generate questions from your document</p>
+          </span>
+        </div>
       </div>
 
-      <!-- Summarization Options -->
-      <div id="summaryOptions">
-        <p>Summary Style:</p>
-        <input type="radio" id="points" name="summaryStyle" value="points" checked>
-        <label for="points">Points</label>
+      <!-- Summarization Options as Cards -->
+      <div id="summaryOptions" class="radio-group">
+        <div class="summary-card" data-summary="points">
+          <span class="card-content">
+            <h3>Points</h3>
+            <p>Concise bullet points summary</p>
+          </span>
+        </div>
 
-        <input type="radio" id="paragraph" name="summaryStyle" value="paragraph">
-        <label for="paragraph">Paragraph</label>
+        <div class="summary-card" data-summary="paragraph">
+          <span class="card-content">
+            <h3>Paragraph</h3>
+            <p>Full paragraph summary</p>
+          </span>
+        </div>
       </div>
     </div>
 
@@ -59,6 +74,110 @@
     </div>
   </div>
 
-  <script src="script.js"></script>
+  <script>
+    // File Upload
+    const fileInput = document.getElementById('fileInput');
+    const uploadBtn = document.getElementById('uploadBtn');
+    const uploadStatus = document.getElementById('uploadStatus');
+    const processBtn = document.getElementById('processBtn');
+    const outputContent = document.getElementById('outputContent');
+    const summaryOptions = document.getElementById('summaryOptions');
+    const copyBtn = document.getElementById('copyBtn');
+    const downloadBtn = document.getElementById('downloadBtn');
+
+    let uploadedFile = null;
+    let selectedAction = 'summarize';
+    let selectedSummary = 'points';
+
+    // File selection
+    fileInput.addEventListener('change', () => {
+      uploadedFile = fileInput.files[0];
+      uploadStatus.textContent = uploadedFile ? `Selected: ${uploadedFile.name}` : 'No file selected.';
+    });
+
+    // Upload file
+    uploadBtn.addEventListener('click', async () => {
+      if (!uploadedFile) { alert('Select a file first'); return; }
+      const formData = new FormData();
+      formData.append('document', uploadedFile);
+      uploadStatus.textContent = 'Uploading...';
+      try {
+        const res = await fetch('http://localhost:5000/api/upload', { method: 'POST', body: formData });
+        const data = await res.json();
+        uploadStatus.textContent = res.ok ? 'Upload successful!' : `Upload failed: ${data.message}`;
+      } catch (err) { console.error(err); uploadStatus.textContent = 'Upload failed!'; }
+    });
+
+    // Action Card Selection
+    const actionCards = document.querySelectorAll('.action-card');
+    actionCards.forEach(card => {
+      card.addEventListener('click', () => {
+        actionCards.forEach(c => c.classList.remove('selected'));
+        card.classList.add('selected');
+        selectedAction = card.dataset.action;
+
+        // Show/hide summary options
+        summaryOptions.style.display = selectedAction === 'summarize' ? 'flex' : 'none';
+      });
+    });
+
+    // Summary Card Selection
+    const summaryCards = document.querySelectorAll('.summary-card');
+    summaryCards.forEach(card => {
+      card.addEventListener('click', () => {
+        summaryCards.forEach(c => c.classList.remove('selected'));
+        card.classList.add('selected');
+        selectedSummary = card.dataset.summary;
+      });
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelector(`.action-card[data-action="${selectedAction}"]`).classList.add('selected');
+      document.querySelector(`.summary-card[data-summary="${selectedSummary}"]`).classList.add('selected');
+      summaryOptions.style.display = selectedAction === 'summarize' ? 'flex' : 'none';
+    });
+
+    // Process Document
+    processBtn.addEventListener('click', async () => {
+      if (!uploadedFile) { alert('Upload file first'); return; }
+      outputContent.textContent = 'Processing...';
+      try {
+        const formData = new FormData();
+        formData.append('document', uploadedFile);
+        formData.append('action', selectedAction);
+        formData.append('summaryStyle', selectedSummary);
+        const res = await fetch('http://localhost:5000/api/upload', { method: 'POST', body: formData });
+        const data = await res.json();
+        if (res.ok) {
+          const result = data.result || data.message;
+          if (selectedAction === 'summarize') {
+            outputContent.innerHTML = selectedSummary === 'points'
+              ? '<h3>Summary:</h3><ul>' + result.split(/\n|•/).filter(Boolean).map(p => `<li>${p.trim()}</li>`).join('') + '</ul>'
+              : `<h3>Summary:</h3><p>${result}</p>`;
+          } else {
+            outputContent.innerHTML = '<h3>Questions:</h3>' + result.split(/\n/).filter(Boolean).map(q => `<div class="question">${q}</div>`).join('');
+          }
+          outputContent.classList.add('show');
+        } else { outputContent.textContent = `Error: ${data.message}`; }
+      } catch (err) { console.error(err); outputContent.textContent = 'Error processing document'; }
+    });
+
+    // Copy & Download
+    copyBtn.addEventListener('click', () => {
+      const text = outputContent.innerText;
+      if (!text.trim()) { alert('No output!'); return; }
+      navigator.clipboard.writeText(text).then(() => alert('Copied!')).catch(() => alert('Copy failed'));
+    });
+
+    downloadBtn.addEventListener('click', () => {
+      const text = outputContent.innerText;
+      if (!text.trim()) { alert('No output!'); return; }
+      const blob = new Blob([text], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = 'document_output.txt';
+      document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+    });
+  </script>
 </body>
 </html>
+
