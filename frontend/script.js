@@ -29,6 +29,18 @@ uploadBtn.addEventListener('click', async () => {
   } catch (err) { console.error(err); uploadStatus.textContent = 'Upload failed!'; }
 });
 
+// Show/hide summary options based on selected action
+actionRadios.forEach(radio => {
+  radio.addEventListener('change', () => {
+    summaryOptions.style.display = radio.value === 'summarize' ? 'flex' : 'none';
+  });
+});
+
+// Ensure correct initial state on page load
+document.addEventListener('DOMContentLoaded', () => {
+  summaryOptions.style.display = document.querySelector('input[name="action"]:checked').value === 'summarize' ? 'flex' : 'none';
+});
+
 // Process document
 processBtn.addEventListener('click', async () => {
   if (!uploadedFile) { alert('Upload file first'); return; }
@@ -36,6 +48,7 @@ processBtn.addEventListener('click', async () => {
   const pageRange = document.getElementById('pageRange').value;
   const summaryStyle = document.querySelector('input[name="summaryStyle"]:checked')?.value || 'points';
   outputContent.textContent = 'Processing...';
+
   try {
     const formData = new FormData();
     formData.append('document', uploadedFile);
@@ -44,6 +57,7 @@ processBtn.addEventListener('click', async () => {
     formData.append('summaryStyle', summaryStyle);
     const res = await fetch('http://localhost:5000/api/upload', { method: 'POST', body: formData });
     const data = await res.json();
+
     if (res.ok) {
       const result = data.result || data.message;
       if (action === 'summarize') {
@@ -53,17 +67,10 @@ processBtn.addEventListener('click', async () => {
       } else if (action === 'questions') {
         outputContent.innerHTML = '<h3>Questions:</h3>' + result.split(/\n/).filter(Boolean).map(q => `<div class="question">${q}</div>`).join('');
       } else { outputContent.textContent = result; }
-    } else { outputContent.textContent = `Error: ${data.message}`; }
+    } else {
+      outputContent.textContent = `Error: ${data.message}`;
+    }
   } catch (err) { console.error(err); outputContent.textContent = 'Error processing document'; }
-});
-
-// Toggle summary options
-actionRadios.forEach(radio => radio.addEventListener('change', () => {
-  summaryOptions.style.display = radio.value === 'summarize' && radio.checked ? 'block' : 'none';
-}));
-
-document.addEventListener('DOMContentLoaded', () => {
-  summaryOptions.style.display = document.querySelector('input[name="action"]:checked').value === 'summarize' ? 'block' : 'none';
 });
 
 // Copy & Download
